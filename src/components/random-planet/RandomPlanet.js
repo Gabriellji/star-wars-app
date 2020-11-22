@@ -13,9 +13,13 @@ class RandomPlanet extends Component {
         loading: true
     };
 
-    constructor() {
-        super();
+    componentDidMount() {
         this.updatePlanet();
+        this.interval = setInterval(this.updatePlanet, 2500);
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.interval);
     }
 
     onPlanetLoaded = (planet) => {
@@ -33,8 +37,8 @@ class RandomPlanet extends Component {
         });
     }
 
-    updatePlanet() {
-        const id = Math.floor(Math.random() * (21 - 1)) + 1; //Math.floor(Math.random() * 21) + 2;
+    updatePlanet= () => {
+        const id = Math.floor(Math.random() * 17) + 2; //Math.floor(Math.random() * 21) + 2;
         this.SwapiService.getPlanet(id)
             .then(this.onPlanetLoaded)
             .catch(this.onError);
@@ -57,17 +61,23 @@ class RandomPlanet extends Component {
     }
 }
 
-const PlanetView = ({ planet, error }) => {
+const PlanetView = ({ planet }) => {
 
     const { id, name, population, rotationPeriod, diameter } = planet;
 
-    const { err } = error;
+    const onImgError = (e) => {
+        try {
+            e.target.onerror = null;
+            e.target.src='https://starwars-visualguide.com/assets/img/big-placeholder.jpg'
+        } catch (e) {
+            console.log(e)
+        }
+    }
 
     return (
         <React.Fragment>
             <img className="planet-image"
-                    onError={(e)=>{e.target.onerror = null;
-                                     e.target.src='https://starwars-visualguide.com/assets/img/big-placeholder.jpg'}}
+                    onError={onImgError}
                     src={`https://starwars-visualguide.com/assets/img/planets/${id}.jpg`}
                     alt={name} />
                 <div>

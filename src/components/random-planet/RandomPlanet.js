@@ -34,7 +34,7 @@ class RandomPlanet extends Component {
     }
 
     updatePlanet() {
-        const id = Math.floor(Math.random() * 21) + 2;
+        const id = Math.floor(Math.random() * (21 - 1)) + 1; //Math.floor(Math.random() * 21) + 2;
         this.SwapiService.getPlanet(id)
             .then(this.onPlanetLoaded)
             .catch(this.onError);
@@ -46,7 +46,7 @@ class RandomPlanet extends Component {
         const hasData = !(loading || error);
         const errorMessage = error ? <Error /> : null; 
         const spinner = loading ? <Spiner /> : null;
-        const content = hasData ? <PlanetView planet={planet} /> : null;
+        const content = hasData ? <PlanetView planet={planet} error={this.state.error} /> : null;
         return (
             <div className="random-planet jumbotron rounded">
                 {errorMessage}
@@ -57,16 +57,18 @@ class RandomPlanet extends Component {
     }
 }
 
-const PlanetView = ({ planet }) => {
+const PlanetView = ({ planet, error }) => {
 
     const { id, name, population, rotationPeriod, diameter } = planet;
+
+    const { err } = error;
 
     return (
         <React.Fragment>
             <img className="planet-image"
-            
-                    src={ id ? `https://starwars-visualguide.com/assets/img/planets/${id}.jpg` 
-                            : 'https://starwars-visualguide.com/assets/img/big-placeholder.jpg'}
+                    onError={(e)=>{e.target.onerror = null;
+                                     e.target.src='https://starwars-visualguide.com/assets/img/big-placeholder.jpg'}}
+                    src={`https://starwars-visualguide.com/assets/img/planets/${id}.jpg`}
                     alt={name} />
                 <div>
                     <h4>{name}</h4>

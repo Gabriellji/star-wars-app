@@ -9,7 +9,18 @@
     height: 150px;
     border-radius: 10px;
     margin-right: 1rem;
+    animation: fade-in 1.2s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
   }
+
+  @keyframes fade-in {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+  
   
   .random-planet .list-group {
     margin: 1rem 0 0 1rem;
